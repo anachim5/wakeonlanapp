@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wake on LAN</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding-top: 20px; /* Add some top padding */
+        }
+
+        .container {
+            max-width: 800px; /* Set max width for content */
+            margin: auto; /* Center content horizontally */
+            padding: 0 20px; /* Add padding to sides */
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px; /* Add margin below heading */
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: left; /* Align list items left */
+        }
+
+        form {
+            display: inline-block; /* Display forms inline */
+        }
+
+        button {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .container {
+                max-width: 100%; /* Adjust max width for smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Wake on LAN</h1>
+
+        <!-- Button to go to /devices -->
+        <a href="{{ url_for('devices') }}" style="position: absolute; top: 10px; right: 10px;">
+            <button>Manage Devices</button>
+        </a>
+
+        {% if devices %}
+            <ul>
+                {% for device in devices %}
+                    <li>
+                        <form action="{{ url_for('wake', mac=device.mac_address) }}" method="post">
+                            <button type="submit">{{ device.name }} - {{ device.mac_address }}</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No devices configured.</p>
+        {% endif %}
+
+        {% if result %}
+            <p>{{ result }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>

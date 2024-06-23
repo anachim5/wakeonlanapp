@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding-top: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        form, .editForm {
+            display: inline-block;
+        }
+
+        button {
+            padding: 5px 10px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <a href="{{ url_for('index') }}" class="back-btn">
+        <button>Back</button>
+    </a>
+    
+    <div class="container">
+        <h1>Device Management</h1>
+
+        <h2>Devices:</h2>
+        <ul>
+            {% for device in devices %}
+            <li>
+                {{ device.name }} - {{ device.mac_address }}
+                <form action="{{ url_for('devices') }}" method="post">
+                    <input type="hidden" name="index" value="{{ loop.index0 }}">
+                    <input type="hidden" name="action" value="delete">
+                    <button type="submit">Delete</button>
+                </form>
+                <button onclick="showEditForm('{{ device.name }}', '{{ device.mac_address }}', {{ loop.index0 }})">Edit</button>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <h2>Add Device:</h2>
+        <form action="{{ url_for('devices') }}" method="post">
+            <input type="hidden" name="action" value="add">
+            Name: <input type="text" name="name" required><br>
+            MAC Address: <input type="text" name="mac_address" required><br>
+            <button type="submit">Add Device</button>
+        </form>
+
+        <h2>Edit Device:</h2>
+        <div class="editForm" style="display:none;">
+            <form action="{{ url_for('devices') }}" method="post">
+                <input type="hidden" id="edit_index" name="index" value="">
+                <input type="hidden" name="action" value="edit">
+                Name: <input type="text" id="edit_name" name="name" required><br>
+                MAC Address: <input type="text" id="edit_mac_address" name="mac_address" required><br>
+                <button type="submit">Save Changes</button>
+                <button type="button" onclick="cancelEdit()">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showEditForm(name, mac_address, index) {
+            document.querySelector('.editForm').style.display = 'block';
+            document.getElementById('edit_name').value = name;
+            document.getElementById('edit_mac_address').value = mac_address;
+            document.getElementById('edit_index').value = index;
+        }
+
+        function cancelEdit() {
+            document.querySelector('.editForm').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

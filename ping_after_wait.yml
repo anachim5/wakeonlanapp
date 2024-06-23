@@ -1,0 +1,16 @@
+---
+- name: Ping after wait
+  hosts: localhost
+  tasks:
+    - name: Wait for 3 minutes
+      ansible.builtin.pause:
+        minutes: 3
+
+    - name: Ping the device
+      ansible.builtin.shell: ping -c 4 {{ mac_address }}
+      register: ping_result
+      ignore_errors: yes
+
+    - name: Print ping result
+      ansible.builtin.debug:
+        msg: "{{ ping_result.stdout }}"

@@ -1,0 +1,6 @@
+---
+- name: Wake on LAN
+  hosts: localhost
+  tasks:
+    - name: Send magic packet
+      ansible.builtin.command: wakeonlan {{ mac_address }}
